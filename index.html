@@ -1,0 +1,2000 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLRP User Guide | Semtech</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => mermaid.initialize({ startOnLoad: true, theme: 'neutral' }));</script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar: 240px;
+      --topbar: 56px;
+      --accent: #00AFAA;       /* Semtech teal — rgb(0,175,170) */
+      --text: #1A1A1A;
+      --border: #E5E7EB;
+      --bg-code: #F5F6F7;
+      --bg-note: #F0FAFA;
+      --bg-warn: #FFFBEC;
+      --bg-caution: #FFF2F1;
+      --muted: #6B7280;
+      --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'SFMono-Regular', Consolas, Menlo, monospace;
+
+      /* Phase colors */
+      --ph1: #3b82f6;
+      --ph1-bg: #eff6ff;
+      --ph2: #10b981;
+      --ph2-bg: #ecfdf5;
+      --ph3: #f59e0b;
+      --ph3-bg: #fffbeb;
+      --ph4: #8b5cf6;
+      --ph4-bg: #f5f3ff;
+    }
+
+    /* ── Semtech top bar ── */
+    #topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px 0 0;
+      z-index: 300;
+      gap: 0;
+    }
+    .topbar-logo {
+      width: var(--sidebar);
+      min-width: var(--sidebar);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-right: 1px solid var(--border);
+      height: 100%;
+    }
+    .topbar-rev {
+      margin-left: auto;
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: .03em;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text);
+      background: #fff;
+      display: flex;
+    }
+
+    /* ── Sidebar ── */
+    #nav {
+      width: var(--sidebar);
+      min-width: var(--sidebar);
+      position: fixed;
+      top: var(--topbar); bottom: 0; left: 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 20px 0 40px;
+      background: #F7F8FA;
+      font-size: 13px;
+    }
+    .nav-title {
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0 16px 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    #nav a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 4px 16px;
+      border-left: 2px solid transparent;
+    }
+    #nav a:hover { color: var(--accent); }
+    #nav a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,175,170,.08); }
+    .nav-sub { padding-left: 26px !important; font-size: 12.5px; }
+
+    /* ── Content ── */
+    #content {
+      margin-left: var(--sidebar);
+      flex: 1;
+      padding: calc(var(--topbar) + 48px) 64px 80px;
+      max-width: 1100px;
+    }
+
+    /* ── Typography ── */
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .doc-type { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .subtitle { color: var(--muted); font-size: 13.5px; margin-bottom: 32px; border-bottom: 2px solid var(--accent); padding-bottom: 16px; margin-top: 6px; }
+    h2 { font-size: 18px; font-weight: 700; margin: 44px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); color: var(--text); }
+    h3 { font-size: 15px; font-weight: 600; margin: 28px 0 10px; color: var(--text); }
+    p { margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; margin-bottom: 12px; }
+    li { margin-bottom: 4px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { font-weight: 600; }
+    code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      background: var(--bg-code);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── Code blocks ── */
+    pre {
+      background: #282c34;
+      color: #abb2bf;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 18px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 12px 0 18px;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+    .code-block { margin: 12px 0 18px; }
+    .code-block pre { margin: 0; border-radius: 0 0 4px 4px; }
+    .code-header {
+      background: #1a1d23;
+      color: #5c6270;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 12px 0 20px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    th { background: #E8FAF8; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text); text-align: left; padding: 8px 12px; border: 1px solid var(--border); border-bottom: 2px solid var(--accent); }
+    td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+    td code { font-size: 12px; }
+    td small { display: block; color: var(--muted); margin-top: 2px; }
+    td small code { font-size: 11px; }
+    .cfg-group td {
+      background: #E8FAF8;
+      border-top: 2px solid var(--accent);
+      padding: 6px 12px;
+      font-size: 12.5px;
+    }
+    .cfg-group code { background: none; padding: 0; font-weight: 700; }
+    .cfg-group-desc { font-weight: 400; color: var(--muted); margin-left: 6px; }
+
+    /* ── Admonitions ── */
+    .note, .warning, .caution { padding: 12px 14px; border-radius: 3px; margin: 14px 0; font-size: 13.5px; }
+    .note    { background: var(--bg-note);    border-left: 3px solid var(--accent); }
+    .warning { background: var(--bg-warn);    border-left: 3px solid #D97706; }
+    .caution { background: var(--bg-caution); border-left: 3px solid #DC2626; }
+    .note p, .warning p, .caution p { margin: 0; }
+    .adm-title { font-weight: 700; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
+    .note .adm-title    { color: var(--accent); }
+    .warning .adm-title { color: #92400E; }
+    .caution .adm-title { color: #991B1B; }
+
+    /* ── API ── */
+    .api-sig { background: #282c34; color: #abb2bf; font-family: var(--mono); font-size: 12.5px; padding: 12px 16px; border-radius: 4px 4px 0 0; overflow-x: auto; margin-top: 18px; }
+    .api-sig .ret  { color: #c678dd; }
+    .api-sig .fn   { color: #61afef; font-weight: 700; }
+    .api-sig .type { color: #e5c07b; }
+    .api-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 4px 4px; padding: 12px 16px; font-size: 13.5px; margin-bottom: 20px; }
+    .api-body p { margin-bottom: 8px; }
+    .api-body ul { margin: 6px 0; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+    /* ── FLRC vs FLRP layer name styles ── */
+    .tech-name-flrp { font-weight: 700; color: var(--accent); margin-right: 6px; }
+    .tech-name-lora { font-weight: 700; color: #3b82f6; margin-right: 6px; }
+    .tech-name-flrc { font-weight: 700; color: #6B7280; margin-right: 6px; }
+    .tech-plus { font-weight: 700; color: var(--muted); padding: 0 10px; }
+    .tech-table tr { height: 70px; }
+    .tech-table td { vertical-align: middle; }
+    td.tech-layer-cell {
+      background: #E8FAF8; color: var(--text);
+      font-size: 11.5px; font-weight: 700;
+      letter-spacing: .04em; text-transform: uppercase; text-align: center;
+      white-space: nowrap; vertical-align: middle; width: 110px;
+      border-right: 2px solid var(--accent);
+    }
+
+    footer {
+      margin-top: 56px;
+      padding: 24px 0 0;
+      border-top: 2px solid var(--accent);
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .footer-brand { font-weight: 700; color: var(--text); font-size: 12px; margin-bottom: 4px; }
+    .footer-legal { font-size: 11px; color: #aaa; margin-top: 8px; }
+
+    /* ════════════════════════════════════════
+       PACKET TRANSACTION — diagram layout
+    ════════════════════════════════════════ */
+
+    .diagram {
+      background: #fafbfc;
+      border: 1px solid var(--border);
+      border-radius: 4px 4px 0 0;
+      padding: 20px 12px 0;
+      margin: 0;
+      overflow-x: auto;
+      position: relative;
+    }
+    .diagram-caption { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; }
+    .diagram-legend {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #444;
+      align-items: center;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 14px;
+      height: 11px;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .td-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px; }
+    .td-divider { border-top: 1px dashed #ddd; margin: 16px 0 14px; }
+
+    /* ── Phase columns below diagram ── */
+    .phase-cols {
+      display: flex;
+      align-items: flex-start;
+      background: #fafbfc;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      margin: 0 0 24px;
+    }
+    .phase-col-spacer { flex: 110 0 0; min-width: 0; }
+    .phase-col {
+      flex-basis: 0;
+      min-width: 0;
+      padding: 14px 12px 16px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #444;
+      border-left: 1.5px dashed #ddd;
+    }
+    .phase-col:first-of-type { border-left: none; }
+    .phase-col-1 { flex-grow: 229; }
+    .phase-col-2 { flex-grow: 229; }
+    .phase-col-3 { flex-grow: 229; }
+    .phase-col-4 { flex-grow: 229; }
+    .phase-col-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .phase-col p { margin: 5px 0; font-size: 12px; color: #555; }
+    .phase-col p:last-child { margin-bottom: 0; }
+    .pc-pkts { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 10px; }
+    .pc-pkt { display: flex; align-items: baseline; gap: 6px; font-size: 11.5px; flex-wrap: wrap; }
+    .pc-dir { color: #aaa; flex-shrink: 0; font-size: 13px; }
+    .pc-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pc-desc { color: #777; }
+    .phase-col-1 .pc-name { background: #e8e8e8; color: #444; }
+    .phase-col-2 .pc-name, .phase-col-3 .pc-name, .phase-col-4 .pc-name { background: #d6f5ec; color: #0d5c44; }
+    /* ── END transaction styles ── */
+
+    /* ── Getting Started sections ── */
+    .gs-section { margin-top: 32px; }
+    .gs-title {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin: 0 0 14px;
+      letter-spacing: .01em;
+    }
+    .gs-title.shared { background: #EFEFEF; color: #555; }
+    .gs-title.role   { background: #E0F7F5; color: var(--accent); }
+    .role-section { margin: 0; }
+    .role-step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+    .role-step-num {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .role-step-body { flex: 1; }
+    .role-step-body p { margin: 0 0 4px; }
+    .role-step-body pre { margin: 8px 0 0; }
+    .callbacks-ref pre { margin-top: 0; }
+    .role-step-body pre { margin-top: 8px; }
+
+    @media (max-width: 760px) {
+      #nav { display: none; }
+      #topbar .topbar-logo { display: none; }
+      #content { margin-left: 0; padding: calc(var(--topbar) + 24px) 20px 60px; }
+    }
+  </style>
+  <style>
+  /* ── Power Profiler inline embed ─────────────────────────────── */
+  .pp-embed {
+    --bg: #F5F6F7; --bg2: #ffffff; --bg3: #eef0f5;
+    --border2: #c4c9d8;
+    --col-wor: #00AFAA; --col-ack: #0b9e6b; --col-flrc: #d47c09;
+    --col-idle: #bcc2d4; --col-cad: #6366f1;
+    height: 680px; background: var(--bg); color: var(--text);
+    font-size: 13px; display: flex; flex-direction: column;
+    margin-top: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  .pp-embed .layout { display: flex; flex: 1; overflow: hidden; min-height: 0; max-width: 1080px; width: 100%; margin: 0 auto; }
+  .pp-embed .left { width: 260px; min-width: 220px; flex-shrink: 0; background: var(--bg2); border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; }
+  .pp-embed input[type=range]:disabled { opacity: .35; pointer-events: none; }
+  .pp-embed input[type=number]:disabled { opacity: .45; pointer-events: none; }
+  .pp-embed .general { padding: 8px 14px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .pp-embed .general .gen-title { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 5px; }
+  .pp-embed .general .gen-row { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--border); }
+  .pp-embed .general .gen-row:last-child { border-bottom: none; }
+  .pp-embed .general .gen-row span:first-child { font-size: 11px; color: var(--muted); }
+  .pp-embed .general .gen-row span:last-child { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text); }
+  .pp-embed .accordion { flex: 1; }
+  .pp-embed details { border-bottom: 1px solid var(--border); }
+  .pp-embed details:first-of-type { border-top: 1px solid var(--border); }
+  .pp-embed summary { list-style: none; cursor: pointer; padding: 10px 14px; display: flex; align-items: center; gap: 7px; user-select: none; }
+  .pp-embed summary::-webkit-details-marker { display: none; }
+  .pp-embed summary .stitle { font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); flex: 1; }
+  .pp-embed summary .scur { font-size: 9px; text-transform: none; }
+  .pp-embed summary .schevron { font-size: 12px; color: var(--border2); transition: transform .18s; flex-shrink: 0; }
+  .pp-embed details[open] summary .schevron { transform: rotate(90deg); }
+  .pp-embed details[open] summary { border-bottom: 1px solid var(--border); }
+  .pp-embed .sec-body { padding: 10px 14px 14px; }
+  .pp-embed .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .pp-embed .f { margin-bottom: 9px; }
+  .pp-embed .f:last-child { margin-bottom: 0; }
+  .pp-embed .f label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .pp-embed .f .row { display: flex; align-items: center; gap: 6px; }
+  .pp-embed input[type=range] { flex: 1; -webkit-appearance: none; appearance: none; height: 3px; background: var(--bg3); border-radius: 99px; outline: none; cursor: pointer; }
+  .pp-embed input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.15); transition: transform .15s; cursor: pointer; }
+  .pp-embed input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .pp-embed input[type=number], .pp-embed select.inline { background: var(--bg3); border: 1px solid var(--border2); color: var(--text); border-radius: 5px; padding: 4px 6px; font-family: var(--mono); font-size: 11px; outline: none; transition: border-color .15s; }
+  .pp-embed input[type=number] { width: 66px; }
+  .pp-embed input[type=number]:focus, .pp-embed select.inline:focus { border-color: var(--accent); }
+  .pp-embed select.inline { cursor: pointer; font-size: 11px; }
+  .pp-embed .unit { font-size: 10px; color: var(--muted); min-width: 22px; white-space: nowrap; }
+  .pp-embed .fixed-badge { display: inline-block; font-family: var(--mono); font-size: 10px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 4px; padding: 3px 8px; color: var(--muted); margin-top: 4px; }
+  .pp-embed .fixed-badge b { color: var(--text); }
+  .pp-embed .right { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px 12px 10px; gap: 5px; min-width: 0; }
+  .pp-embed .row-label { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 0 2px; flex-shrink: 0; }
+  .pp-embed .results-init { display: grid; grid-template-columns: 1.15fr 1fr 1fr 1fr; gap: 5px; flex-shrink: 0; }
+  .pp-embed .slave-bar { display: flex; align-items: stretch; gap: 0; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--col-cad); border-radius: 4px; padding: 5px 12px; flex-shrink: 0; }
+  .pp-embed .slave-bar .sb-item { display: flex; flex-direction: column; justify-content: center; padding: 0 12px 0 0; }
+  .pp-embed .slave-bar .sb-item + .sb-item { padding: 0 0 0 12px; border-left: 1px solid var(--border); }
+  .pp-embed .slave-bar .sb-lbl { font-family: var(--mono); font-size: 7px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .pp-embed .slave-bar .sb-val { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--col-cad); }
+  .pp-embed .sc { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 6px 10px; }
+  .pp-embed .sc.primary-init { border-left: 3px solid var(--accent); padding-left: 9px; }
+  .pp-embed .sc .sc-lbl { font-family: var(--mono); font-size: 7px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 2px; }
+  .pp-embed .sc.primary-init .sc-val { font-family: var(--mono); font-size: 1.45rem; font-weight: 700; color: var(--accent); line-height: 1; display: block; }
+  .pp-embed .sc.primary-init .sc-sub { font-size: 9px; color: var(--muted); margin-top: 2px; display: block; }
+  .pp-embed .cap-note { font-size: 9px; color: var(--muted); margin-top: 4px; font-family: var(--mono); }
+  .pp-embed .sc-group { display: flex; flex-direction: column; height: 100%; }
+  .pp-embed .sc-item { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 2px 0; }
+  .pp-embed .sc-item .sc-val { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.1; margin-top: 1px; }
+  .pp-embed .sc-sep { height: 1px; background: var(--border); margin: 2px 0; }
+  .pp-embed .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px 5px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .pp-embed .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; flex-shrink: 0; }
+  .pp-embed .chart-role { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .pp-embed .legend { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pp-embed .legend span { display: flex; align-items: center; gap: 4px; font-size: 9px; font-family: var(--mono); color: var(--muted); }
+  .pp-embed .lsw { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .pp-embed .canvas-wrap { flex: 1; min-height: 0; }
+  .pp-embed canvas { display: block; width: 100%; height: 100%; }
+  .pp-embed.pp-expanded { height: 860px; }
+  .pp-embed .pp-section-hdr { padding: 5px 14px 4px; font-family: var(--mono); font-size: 8px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: #fff; flex-shrink: 0; }
+  .pp-embed .pp-slave-toggle { padding: 8px 14px; background: var(--bg3); border-top: 2px solid var(--border2); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .pp-embed .pp-slave-toggle label { display: flex; align-items: center; gap: 7px; cursor: pointer; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: .10em; text-transform: uppercase; color: var(--muted); }
+  .pp-embed .pp-slave-toggle input[type=checkbox] { width: 13px; height: 13px; accent-color: var(--col-cad); cursor: pointer; flex-shrink: 0; }
+  .pp-embed .sc.primary-sv { border-left: 3px solid var(--col-cad); padding-left: 9px; }
+  .pp-embed .sc.primary-sv .sc-val { font-family: var(--mono); font-size: 1.45rem; font-weight: 700; color: var(--col-cad); line-height: 1; display: block; }
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="topbar-logo">
+    <img src="data:image/png;base64,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" alt="Semtech" height="32" style="display:block;">
+  </div>
+  <span class="topbar-rev">Rev. 0.4 &nbsp;·&nbsp; 2026</span>
+</div>
+
+<nav id="nav">
+  <div class="nav-title">Contents</div>
+  <a href="#overview">Overview</a>
+  <a href="#roles">Roles</a>
+  <a href="#transaction">Packet Transaction</a>
+  <a href="#configuration">Protocol Configuration</a>
+  <a href="#getting-started">Getting Started</a>
+  <a class="nav-sub" href="#gs-common">Common Setup</a>
+  <a class="nav-sub" href="#gs-slave">Slave</a>
+  <a class="nav-sub" href="#gs-initiator">Initiator</a>
+  <a class="nav-sub" href="#gs-callbacks">Common Callbacks</a>
+  <a href="#examples">Examples</a>
+  <a class="nav-sub" href="#ex-baremetal">Bare-Metal (USP)</a>
+  <a class="nav-sub" href="#ex-zephyr">Zephyr (USP_Zephyr)</a>
+  <a href="#power-profiler">Power Profiler</a>
+  <a href="#api">API Reference</a>
+</nav>
+
+<main id="content">
+
+  <div class="doc-type">User Guide &nbsp;·&nbsp; Rev. 0.4</div>
+  <h1>Fast Long-Range Protocol (FLRP)</h1>
+  <p class="subtitle">LR2021 &nbsp;·&nbsp; Sub-GHz &amp; 2.4 GHz</p>
+
+  <!-- OVERVIEW -->
+  <h2 id="overview">Overview</h2>
+  <p>
+    <strong>FLRP</strong> <em>(Fast Long-Range Protocol)</em> is a high-throughput wireless transfer
+    protocol built on top of <strong>FLRC</strong> (PHY layer). It pairs a <strong>LoRa®</strong> wake-up
+    phase with a high-speed <strong>FLRC burst</strong>, optimized for the transfer of large files
+    with no strong latency requirements. The current release supports point-to-point communication;
+    one-to-many and many-to-one topologies are under development.
+  </p>
+  <p>
+    Even though FLRP can be used in combination with multiple Semtech chips (e.g. SX1281/0 and LR2021),
+    this user guide focuses on the LR2021.
+  </p>
+  <div class="table-wrap">
+    <table class="tech-table">
+      <tbody>
+        <tr>
+          <td class="tech-layer-cell">Protocol</td>
+          <td colspan="2" style="text-align:center;"><span class="tech-name-flrp">FLRP</span><br>Connection setup &nbsp;·&nbsp; Adaptive link selection &nbsp;·&nbsp; Burst segmentation &nbsp;·&nbsp; ACK + retry &nbsp;·&nbsp; Optional AES-CMAC integrity</td>
+        </tr>
+        <tr>
+          <td class="tech-layer-cell">PHY</td>
+          <td><span class="tech-name-lora">LoRa®</span><br>Wake-on-Radio (WOR) &nbsp;·&nbsp; CAD &nbsp;·&nbsp; Frequency offset measurement &nbsp;·&nbsp; Time synchronization</td>
+          <td><span class="tech-name-flrc">FLRC</span><br>High-speed data burst &nbsp;·&nbsp; Raw packet TX/RX &nbsp;·&nbsp; 0.26–2.6 Mbps &nbsp;·&nbsp; CR 1/2, 2/3, 3/4 &nbsp;·&nbsp; Sub-GHz &amp; 2.4 GHz</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Why FLRP?</h3>
+  <p>As detailed in <strong>AN 1200.101</strong>, in order to maximize performance, FLRC usage must cope with two main requirements:</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Limitation</th><th>Mitigation</th><th>Cost</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tight frequency tolerance</strong> at low data rates</td>
+          <td>TCXO, or ≥ 1.0 Mbps only</td>
+          <td>+$0.20–0.50 BOM, warm-up delay, or range reduction</td>
+        </tr>
+        <tr>
+          <td><strong>Wake-on-Noise</strong> (false detection) at CR 1/2 &amp; 2/3</td>
+          <td>Max preamble + CR 3/4</td>
+          <td>Higher TOA, 1–2 dB sensitivity loss</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Each mitigation applied independently introduces <strong>trade-offs in sensitivity, data throughput, or BOM cost</strong>.</p>
+  <p style="margin-top:10px;font-weight:600;color:var(--accent);">→ The proposed protocol-level approach embodied by FLRP provides a holistic solution, maximizing data throughput and sensitivity with the lowest impact on BOM cost and energy efficiency</p>
+  <p style="margin-top:16px;"><strong>FLRP resolves both at protocol level:</strong></p>
+  <ul>
+    <li>One LoRa WOR exchange compensates the frequency offset so FLRC is aligned before the first bit<br>
+      <span style="color:var(--muted);font-size:12.5px">→ no TCXO required &nbsp;·&nbsp; up to 4× tolerance at low data rates (±17.5 → ±71 ppm at 325 kbps)</span></li>
+    <li>LoRa timing sync collapses the FLRC Rx window to minimum<br>
+      <span style="color:var(--muted);font-size:12.5px">→ wake-on-noise eliminated &nbsp;·&nbsp; 17% lower Rx power from fewer correlators</span></li>
+    <li>LoRa periodic CAD enables always-on listening at as low as ~100 µA<br>
+      <span style="color:var(--muted);font-size:12.5px">→ not achievable with standalone FLRC continuous RX</span></li>
+  </ul>
+
+  <h3>Key capabilities</h3>
+  <ul>
+    <li>Up to <strong>1.7 Mbps</strong> effective baud rate @ 2.6 MHz FLRC PHY, adaptive 0.26–2.6 Mbps per exchange</li>
+    <li><strong>1 km+</strong> range at 1.3 Mbps (Sub-GHz)</li>
+    <li>Adaptive link with up to <strong>16 channel selection</strong> and automatic datarate adaptation</li>
+    <li>Up to <strong>16 MB</strong> payload per exchange, with automatic multi-burst segmentation</li>
+    <li>Reliable delivery: per-burst ACK with selective retransmit over lossy links</li>
+    <li>Optional <strong>AES-CMAC</strong> per-packet integrity, replacing the radio CRC</li>
+    <li>Sub-GHz and 2.4 GHz frequency bands</li>
+  </ul>
+
+  <hr />
+
+  <!-- ROLES -->
+  <h2 id="roles">Roles</h2>
+  <p>Each device has a fixed <strong>session role</strong> (Slave or Initiator) and a per-exchange <strong>data direction</strong> (who transmits the payload).</p>
+
+  <h3>Session roles</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Role</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Initiator</strong></td><td>Always starts the exchange by sending the WOR. Addresses the slave by DevEUI.</td></tr>
+        <tr><td><strong>Slave</strong></td><td>Waits in periodic LoRa periodic CAD sleep. Wakes up and answers the WOR.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Data-direction roles (set per exchange)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Transfer Direction</th><th>Initiator</th><th>Slave</th><th>Use case</th></tr></thead>
+      <tbody>
+        <tr><td><code>0</code>: initiator receives</td><td>Receiver</td><td>Transmitter</td><td>Sensor data upload</td></tr>
+        <tr><td><code>1</code>: initiator sends</td><td>Transmitter</td><td>Receiver</td><td>Firmware / config download</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr />
+
+  <!-- ══════════════════════════════════════════════
+       PACKET TRANSACTION — enhanced presentation
+  ══════════════════════════════════════════════ -->
+  <h2 id="transaction">Packet Transaction</h2>
+
+  <p>
+    Every FLRP exchange follows the same four-phase sequence regardless of transfer direction.
+    The slave does not stay in continuous RX; it periodically checks for a LoRa preamble and sleeps
+    in between.
+  </p>
+
+  <!-- Timing diagram -->
+  <div class="diagram" style="padding:16px 12px 0; background:#fff;">
+  <div class="diagram-legend">
+    <span><span class="legend-dot" style="background:#2DC9A0;"></span>FLRC</span>
+    <span><span class="legend-dot" style="background:#555;"></span>LoRa</span>
+  </div>
+  <div class="td-label">Data direction: Slave &rarr; Initiator &nbsp;·&nbsp; mode 0</div>
+  <svg viewBox="0 0 1020 413" width="100%" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; overflow:visible;">
+    <defs>
+      <pattern id="p-flrc" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" fill="#2DC9A0"/>
+        <path d="M-1,1 L1,-1 M0,8 L8,0 M7,9 L9,7" stroke="rgba(255,255,255,0.72)" stroke-width="2.5"/>
+      </pattern>
+      <pattern id="p-cad" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" fill="#f8fafc"/>
+        <path d="M-1,1 L1,-1 M0,8 L8,0 M7,9 L9,7" stroke="#bbb" stroke-width="2"/>
+      </pattern>
+    </defs>
+
+    <!-- Phase titles — equal 229 px each (95 + 4×229 = 1011) -->
+    <text x="210" y="78" text-anchor="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">1 — CONNECTION SETUP</text>
+    <text x="439" y="78" text-anchor="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">2 — ADAPTIVE LINK</text>
+    <text x="668" y="78" text-anchor="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">3 — DATA BURST</text>
+    <text x="897" y="78" text-anchor="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">4 — DATA INTEGRITY CHECK</text>
+
+    <!-- Phase separator verticals (equally spaced) -->
+    <line x1="324" y1="60" x2="324" y2="408" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+    <line x1="553" y1="60" x2="553" y2="408" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+    <line x1="782" y1="60" x2="782" y2="408" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+    <!-- ══════════ INITIATOR ══════════ -->
+    <text x="54" y="188" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">INITIATOR</text>
+
+    <!-- WOR — Phase 1 -->
+    <rect x="112" y="162" width="128" height="52" fill="#555" rx="2"/>
+    <text x="176" y="193" text-anchor="middle" fill="white" font-size="15" font-weight="700">WOR</text>
+
+    <!-- FLRC ACK ×3 — Phase 2 -->
+    <rect x="444" y="162" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="461" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="461" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <rect x="481" y="162" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="498" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="498" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <rect x="518" y="162" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="535" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="535" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <!-- BURST ACK — Phase 4 (first) -->
+    <rect x="787" y="162" width="46" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="810" y="183" text-anchor="middle" fill="white" font-size="11" font-weight="700">BURST</text>
+    <text x="810" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="700">ACK</text>
+
+    <!-- BURST ACK — Phase 4 (final, after RETRY) -->
+    <rect x="927" y="162" width="46" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="950" y="183" text-anchor="middle" fill="white" font-size="11" font-weight="700">BURST</text>
+    <text x="950" y="198" text-anchor="middle" fill="white" font-size="11" font-weight="700">ACK</text>
+
+    <!-- ══════════ SLAVE ══════════ -->
+    <text x="54" y="268" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">SLAVE</text>
+
+    <!-- Periodic CAD — Phase 1 -->
+    <rect x="112" y="242" width="133" height="52" fill="url(#p-cad)" stroke="#bbb" stroke-width="1.5" rx="2"/>
+    <text x="178" y="272" text-anchor="middle" fill="#666" font-size="11" font-weight="600">Periodic CAD</text>
+
+    <!-- WOR ACK — Phase 1 -->
+    <rect x="245" y="242" width="68" height="52" fill="#555" rx="2"/>
+    <text x="279" y="264" text-anchor="middle" fill="white" font-size="10" font-weight="700">WOR</text>
+    <text x="279" y="279" text-anchor="middle" fill="white" font-size="10" font-weight="700">ACK</text>
+
+    <!-- FLRC REQ ×3 — Phase 2 -->
+    <rect x="328" y="242" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="345" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="345" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <rect x="365" y="242" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="382" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="382" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <rect x="402" y="242" width="34" height="52" fill="url(#p-flrc)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="419" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="419" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <!-- FLRC BURST — Phase 3 -->
+    <rect x="558" y="242" width="218" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="667" y="271" text-anchor="middle" fill="white" font-size="14" font-weight="700">FLRC BURST</text>
+    <text x="667" y="313" text-anchor="middle" fill="#666" font-size="11">Max 400 ms</text>
+
+    <!-- FLRC BURST (retry) — Phase 4 -->
+    <rect x="849" y="242" width="75" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="887" y="263" text-anchor="middle" fill="white" font-size="10" font-weight="700">FLRC BURST</text>
+    <text x="887" y="278" text-anchor="middle" fill="white" font-size="10" font-weight="700">(retry)</text>
+
+    <!-- bottom rule -->
+    <line x1="95" y1="408" x2="1012" y2="408" stroke="#e0e0e0" stroke-width="1"/>
+  </svg>
+  <div class="td-divider"></div>
+  <div class="td-label">Data direction: Initiator &rarr; Slave &nbsp;·&nbsp; mode 1</div>
+  <svg viewBox="0 95 1020 318" width="100%" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <defs>
+      <pattern id="p-flrc-2" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" fill="#2DC9A0"/>
+        <path d="M-1,1 L1,-1 M0,8 L8,0 M7,9 L9,7" stroke="rgba(255,255,255,0.72)" stroke-width="2.5"/>
+      </pattern>
+      <pattern id="p-cad-2" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" fill="#f8fafc"/>
+        <path d="M-1,1 L1,-1 M0,8 L8,0 M7,9 L9,7" stroke="#bbb" stroke-width="2"/>
+      </pattern>
+    </defs>
+
+    <!-- Phase separator verticals (equally spaced) -->
+    <line x1="324" y1="95" x2="324" y2="413" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+    <line x1="553" y1="95" x2="553" y2="413" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+    <line x1="782" y1="95" x2="782" y2="413" stroke="#ddd" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+    <!-- ══════════ INITIATOR ══════════ -->
+    <text x="54" y="188" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">INITIATOR</text>
+
+    <!-- WOR — Phase 1 -->
+    <rect x="112" y="162" width="128" height="52" fill="#555" rx="2"/>
+    <text x="176" y="193" text-anchor="middle" fill="white" font-size="15" font-weight="700">WOR</text>
+
+    <!-- FLRC REQ ×3 — Phase 2 (initiator is transmitter, sends REQ) -->
+    <rect x="328" y="162" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="345" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="345" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <rect x="365" y="162" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="382" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="382" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <rect x="402" y="162" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="419" y="183" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="419" y="198" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">REQ</text>
+
+    <!-- FLRC BURST — Phase 3 (initiator transmits) -->
+    <rect x="558" y="162" width="218" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="667" y="191" text-anchor="middle" fill="white" font-size="14" font-weight="700">FLRC BURST</text>
+    <text x="667" y="228" text-anchor="middle" fill="#666" font-size="11">Max 400 ms</text>
+
+    <!-- FLRC BURST (retry) — Phase 4 (initiator) -->
+    <rect x="849" y="162" width="75" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="887" y="183" text-anchor="middle" fill="white" font-size="10" font-weight="700">FLRC BURST</text>
+    <text x="887" y="198" text-anchor="middle" fill="white" font-size="10" font-weight="700">(retry)</text>
+
+    <!-- ══════════ SLAVE ══════════ -->
+    <text x="54" y="268" text-anchor="middle" dominant-baseline="middle" fill="#888" font-size="11.5" font-weight="700" letter-spacing="0.5">SLAVE</text>
+
+    <!-- Periodic CAD — Phase 1 -->
+    <rect x="112" y="242" width="133" height="52" fill="url(#p-cad-2)" stroke="#bbb" stroke-width="1.5" rx="2"/>
+    <text x="178" y="272" text-anchor="middle" fill="#666" font-size="11" font-weight="600">Periodic CAD</text>
+
+    <!-- WOR ACK — Phase 1 -->
+    <rect x="245" y="242" width="68" height="52" fill="#555" rx="2"/>
+    <text x="279" y="264" text-anchor="middle" fill="white" font-size="10" font-weight="700">WOR</text>
+    <text x="279" y="279" text-anchor="middle" fill="white" font-size="10" font-weight="700">ACK</text>
+
+    <!-- FLRC ACK ×3 — Phase 2 (slave is receiver, sends ACK) -->
+    <rect x="444" y="242" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="461" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="461" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <rect x="481" y="242" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="498" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="498" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <rect x="518" y="242" width="34" height="52" fill="url(#p-flrc-2)" stroke="#1a9e7e" stroke-width="1.5" rx="2"/>
+    <text x="535" y="263" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">FLRC</text>
+    <text x="535" y="278" text-anchor="middle" fill="#0a4a35" font-size="11" font-weight="700">ACK</text>
+
+    <!-- BURST ACK ×2 — Phase 4 (slave sends) -->
+    <rect x="787" y="242" width="46" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="810" y="263" text-anchor="middle" fill="white" font-size="11" font-weight="700">BURST</text>
+    <text x="810" y="278" text-anchor="middle" fill="white" font-size="11" font-weight="700">ACK</text>
+
+    <rect x="927" y="242" width="46" height="52" fill="#2DC9A0" rx="2"/>
+    <text x="950" y="263" text-anchor="middle" fill="white" font-size="11" font-weight="700">BURST</text>
+    <text x="950" y="278" text-anchor="middle" fill="white" font-size="11" font-weight="700">ACK</text>
+
+    <!-- bottom rule -->
+    <line x1="95" y1="408" x2="1012" y2="408" stroke="#e0e0e0" stroke-width="1"/>
+  </svg>
+  <div class="diagram-caption" style="margin-top:6px; margin-bottom:12px;">Figure 1: FLRP protocol timing. Phases 1–2 are identical for both directions. In Phase 3–4 the data flow (FLRC BURST / BURST ACK) swaps lanes. Time flows left → right.</div>
+  </div>
+
+  <!-- Phase descriptions aligned with diagram columns -->
+  <div class="phase-cols">
+    <div class="phase-col-spacer"></div>
+
+    <div class="phase-col phase-col-1">
+      <div class="pc-pkts">
+        <div class="pc-pkt"><span class="pc-dir">→</span><span class="pc-name">WOR</span><span class="pc-desc">target DevEUI · channels · default DR</span></div>
+        <div class="pc-pkt"><span class="pc-dir">←</span><span class="pc-name">WOR ACK</span><span class="pc-desc">selected DR · min interframe delay</span></div>
+      </div>
+      <ul>
+        <li>Initiator sends a <strong>long-preamble WOR</strong> (≥ slave sleep period); slave catches it during periodic CAD, verifies DevEUI, replies, and both devices become <strong>time and frequency aligned</strong>.</li>
+        <li>WOR ACK can be disabled for one-way<sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup> communication.</li>
+      </ul>
+    </div>
+
+    <div class="phase-col phase-col-2">
+      <div class="pc-pkts">
+        <div class="pc-pkt"><span class="pc-dir">→</span><span class="pc-name">FLRC REQ × 3 (up to 16)</span><span class="pc-desc">one per enabled channel</span></div>
+        <div class="pc-pkt"><span class="pc-dir">←</span><span class="pc-name">FLRC ACK × 3 (up to 16)</span><span class="pc-desc">best channel · DR · burst params</span></div>
+      </div>
+      <ul>
+        <li>Transmitter probes each enabled channel (up to 16); receiver selects the best channel and datarate from measured RSSI and frequency offset.</li>
+        <li>Can be fully disabled, or limited to channel-only selection or datarate-only selection.</li>
+      </ul>
+    </div>
+
+    <div class="phase-col phase-col-3">
+      <div class="pc-pkts">
+        <div class="pc-pkt"><span class="pc-dir">→</span><span class="pc-name">FLRC BURST</span><span class="pc-desc">up to 255 packets · 300–400 B each</span></div>
+      </div>
+      <ul>
+        <li>Back-to-back FLRC packets, hard-capped at <strong>400 ms per burst</strong>. If the payload exceeds that at the selected datarate, the stack automatically splits it into consecutive bursts, each with its own BURST ACK + retry cycle.</li>
+        <li>When <code>crypto_enabled</code>, a per-packet AES-CMAC MIC replaces the radio CRC.</li>
+        <li>Stream<sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup> and one-way<sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup> modes skip the BURST ACK.</li>
+      </ul>
+    </div>
+
+    <div class="phase-col phase-col-4">
+      <div class="pc-pkts">
+        <div class="pc-pkt"><span class="pc-dir">←</span><span class="pc-name">BURST ACK</span><span class="pc-desc">missing-packet bitmap · link quality</span></div>
+        <div class="pc-pkt"><span class="pc-dir">→</span><span class="pc-name">FLRC BURST (retry)</span><span class="pc-desc">missing packets only</span></div>
+        <div class="pc-pkt"><span class="pc-dir">←</span><span class="pc-name">BURST ACK</span><span class="pc-desc">all received</span></div>
+      </div>
+      <ul>
+        <li>Triggered when residual loss exceeds <code>burst_target_per</code> (0 = disabled by default).</li>
+        <li>Only missing packets are retransmitted.</li>
+        <li>No retry when loss is within target or BURST ACK is disabled.</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <hr />
+
+  <!-- CONFIGURATION -->
+  <h2 id="configuration">Protocol Configuration</h2>
+  <p>Key configurable parameters, grouped by config struct. Most defaults are suitable for a first integration.</p>
+  <p style="margin-top:-6px;font-size:13px;color:var(--muted);"><strong>Field</strong>: runtime API member &nbsp;·&nbsp; <strong>Macro</strong>: compile-time equivalent in <code>flrp_configuration.h</code> &nbsp;·&nbsp; "—" in Field = compile-time only</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Default</th><th>Field</th><th>Macro</th><th>Notes</th></tr></thead>
+      <tbody>
+
+        <tr class="cfg-group">
+          <td colspan="5"><code>smtc_flrp_api_config_t</code><span class="cfg-group-desc">passed to <code>smtc_flrp_init()</code></span></td>
+        </tr>
+        <tr>
+          <td>Frequency band</td>
+          <td><code>865.1 MHz</code> / <code>2.412 GHz</code></td>
+          <td><code>.freq_plan</code></td>
+          <td><code>SMTC_FLRP_FREQ_470MHz</code><br><code>SMTC_FLRP_FREQ_865MHz</code><br><code>SMTC_FLRP_FREQ_915MHz</code><br><code>SMTC_FLRP_FREQ_2GHz4</code></td>
+          <td>Selects the operating band; applies to both WOR and FLRC channels</td>
+        </tr>
+
+        <tr class="cfg-group">
+          <td colspan="5"><code>smtc_flrp_flrc_radio_config_t</code><span class="cfg-group-desc">FLRC params; read with <code>smtc_flrp_get_current_radio_config()</code>, apply with <code>smtc_flrp_set_new_radio_config()</code></span></td>
+        </tr>
+        <tr>
+          <td>FLRC datarate</td>
+          <td><code>2.6 Mbps</code></td>
+          <td><code>.raw_bit_rate</code></td>
+          <td><code>DATA_FLRC_RAW_BIT_RATE</code></td>
+          <td>Range 0.26 – 2.6 Mbps; 2.4 GHz limited to 2.08 – 2.60 Mbps for burst and burst ACK</td>
+        </tr>
+        <tr>
+          <td>FLRC coding rate</td>
+          <td><code>CR 1/2</code></td>
+          <td>—</td>
+          <td><code>DATA_FLRC_CR</code></td>
+          <td>Compile-time default only.</td>
+        </tr>
+        <tr>
+          <td>TX power</td>
+          <td><code>14 dBm</code></td>
+          <td><code>.tx_power_in_dbm</code></td>
+          <td><code>TX_OUTPUT_POWER_DBM</code></td>
+          <td>−17 to +22 dBm (sub-GHz) · −18 to +13 dBm (2.4 GHz HF PA)</td>
+        </tr>
+        <tr>
+          <td>Channels</td>
+          <td>3 (up to 16)</td>
+          <td><code>.channels_freq_hz[]</code><br><code>.nb_channels</code></td>
+          <td><code>DATA_FLRC_NB_FREQ</code></td>
+          <td>Hop step: 2.7 MHz @865 MHz · 5 MHz @2.4 GHz</td>
+        </tr>
+        <tr>
+          <td>FLRC interframe delay</td>
+          <td><code>700 µs</code></td>
+          <td><code>.interframe_delay_us</code></td>
+          <td><code>DATA_FLRC_MIN_INTERFRAME_DURATION_US</code></td>
+          <td>Both devices must match. Depends on PA ramp: 200 µs (48 µs), 400 µs (128 µs), 700 µs (272 µs)</td>
+        </tr>
+        <tr>
+          <td>Burst target PER</td>
+          <td><code>0 %</code></td>
+          <td><code>.burst_target_per</code></td>
+          <td><code>DATA_FLRC_BURST_TARGET_PER_PERCENTAGE</code></td>
+          <td>0 = no retry; &gt; 0 triggers BURST ACK + retry phase (up to 3× the FLRC BURST TOA)</td>
+        </tr>
+
+        <tr class="cfg-group">
+          <td colspan="5"><code>smtc_flrp_wor_radio_config_t</code><span class="cfg-group-desc">WOR params, configured via <code>radio.wor_rx.*</code> / <code>radio.wor_tx.*</code> in <code>smtc_flrp_set_new_radio_config()</code></span></td>
+        </tr>
+        <tr>
+          <td>WOR modulation</td>
+          <td>SF10, BW 500 kHz, CR LI 4/8</td>
+          <td><code>.sf</code> / <code>.bw</code> / <code>.frequency_hz</code></td>
+          <td><code>WOR_LORA_SPREADING_FACTOR</code><br><code>WOR_LORA_BANDWIDTH</code><br><code>WOR_865MHz_RF_FREQ_IN_HZ</code><br><code>WOR_2GHz4_RF_FREQ_IN_HZ</code><br><small>CR: <code>WOR_LORA_CODING_RATE</code> (compile-time only)</small></td>
+          <td>Private syncword; SF and BW set wake-up latency and slave RX window size</td>
+        </tr>
+        <tr>
+          <td>WOR wake preset</td>
+          <td>Preset A: 1 s preamble, 950 ms RX period</td>
+          <td>—</td>
+          <td><code>WOR_LORA_LONG_PREAMBLE_MS</code><br><code>RESTART_WOR_RX_DELAY_MS</code></td>
+          <td>Must be changed as a pair. Preset B (100 ms / 95 ms): 10× faster wake, 10× higher slave RX power</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <div class="adm-title">Low-power wake-up presets</div>
+    <p>
+      <strong>Preset A (default):</strong> 1 s preamble, slave duty cycle ~0.05 %, latency ≤ 1 s, optimized for slave power.
+      <strong>Preset B:</strong> 100 ms preamble, slave duty cycle ~0.52 %, latency ≤ 100 ms, 10× faster wake, 10× higher slave RX power.
+      Always change <code>WOR_LORA_LONG_PREAMBLE_MS</code> and <code>RESTART_WOR_RX_DELAY_MS</code> together.
+    </p>
+  </div>
+
+  <hr />
+
+  <!-- GETTING STARTED -->
+  <h2 id="getting-started">Getting Started</h2>
+  <p>Follow the steps below to integrate FLRP into your application. All devices share the same initialization and engine loop; the only difference between roles is which function you call after init.</p>
+  <p style="margin-top:-6px;">Include <code>smtc_flrp_api/smtc_flrp_api.h</code> and link against the FLRP library.</p>
+
+  <!-- Common Setup -->
+  <div class="gs-section">
+  <h3 id="gs-common" class="gs-title shared">Common Setup</h3>
+  <p>Call <code>smtc_rac_init()</code> first, then <code>smtc_flrp_init()</code> once on startup, before any role-specific call.</p>
+<pre><code>smtc_rac_init();
+
+smtc_flrp_api_config_t cfg = {
+    .dev_eui        = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 },
+    .crypto_enabled = false,          /* true enables AES-CMAC MIC per packet */
+    .freq_plan      = SMTC_FLRP_FREQ_865MHz,
+    .crystal_error  = 20,             /* local oscillator accuracy in ppm     */
+};
+
+smtc_flrp_init( cfg, on_tx_done, on_rx_done, NULL );</code></pre>
+
+  <p>Optionally override the default radio parameters after init:</p>
+<pre><code>smtc_flrp_radio_config_t radio = smtc_flrp_get_current_radio_config();
+radio.flrc.tx_power_in_dbm      = 14;
+radio.flrc.raw_bit_rate         = RAL_FLRC_RAW_BIT_RATE_2_600_MBPS;
+smtc_flrp_set_new_radio_config( radio );</code></pre>
+
+  </div><!-- /gs-section common setup -->
+
+  <!-- Slave -->
+  <div class="role-section gs-section">
+    <h3 id="gs-slave" class="gs-title role">Slave</h3>
+    <p>The slave stays in LoRa periodic CAD active-sleep and wakes automatically when an initiator WOR matches its DevEUI. No polling loop needed.</p>
+
+    <div class="role-step">
+      <div class="role-step-num">1</div>
+      <div class="role-step-body">
+        <p>Start periodic listening with a receive buffer.</p>
+<pre><code>static uint8_t rx_buf[20 * 1024];
+
+smtc_flrp_start_periodic_listening( rx_buf, sizeof( rx_buf ) );</code></pre>
+      </div>
+    </div>
+
+    <div class="role-step">
+      <div class="role-step-num">2</div>
+      <div class="role-step-body">
+        <p><strong>Optional</strong>: pre-arm data to send when the initiator polls. The payload stays armed until replaced or cleared.</p>
+<pre><code>smtc_flrp_slave_prepare_data_to_send( tx_buf, tx_size );
+/* Clear with tx_size = 0 */</code></pre>
+      </div>
+    </div>
+
+    <div class="role-step">
+      <div class="role-step-num">3</div>
+      <div class="role-step-body">
+        <p>Run the engine. <code>smtc_flrp_call_run()</code> returns <code>true</code> only when a time-critical radio operation is pending; use it to sleep the CPU otherwise.</p>
+<pre><code>while( 1 )
+{
+    if( smtc_flrp_call_run() )
+        smtc_flrp_run_engine();
+
+    /* sleep / idle until next radio event */
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="role-step">
+      <div class="role-step-num">4</div>
+      <div class="role-step-body">
+        <p><code>rx_callback</code> fires with the received payload; <code>tx_callback</code> fires once the armed data has been delivered to the initiator. To stop listening, call <code>smtc_flrp_stop_periodic_listening()</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Initiator -->
+  <div class="role-section gs-section">
+    <h3 id="gs-initiator" class="gs-title role">Initiator</h3>
+    <p>The initiator wakes the slave with a WOR, runs the adaptive link, then performs the FLRC burst. Both transmit and receive directions are supported.</p>
+
+    <div class="role-step">
+      <div class="role-step-num">1</div>
+      <div class="role-step-body">
+        <p>Configure the communication parameters, then call the transfer direction once per exchange.</p>
+<pre><code>smtc_flrp_com_config_t com = {
+    .com_mode             = SMTC_FLRP_BIDIRECTIONAL,
+    .slave_dev_eui        = { 0x10, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 },
+    .filter_len           = 0,         /* EUI prefix bits for ONE_WAY broadcast */
+    .link_adaptation_mode = SMTC_FLRP_LINK_ADAPTATION_FULLY_ENABLED,
+};
+
+/* Send data to slave */
+smtc_flrp_initiate_transmission( tx_buf, tx_size, com );
+
+/* Request data from slave */
+smtc_flrp_initiate_reception( rx_buf, sizeof( rx_buf ), com );</code></pre>
+        <div class="table-wrap" style="margin-top:12px;">
+          <table>
+            <thead><tr><th><code>com_mode</code></th><th>Call</th><th>Direction</th><th>Behavior</th></tr></thead>
+            <tbody>
+              <tr><td><code>BIDIRECTIONAL</code></td><td><code>initiate_transmission()</code></td><td>Initiator → Slave</td><td>BURST ACK + retry; slave can piggyback a reply</td></tr>
+              <tr><td><code>BIDIRECTIONAL</code></td><td><code>initiate_reception()</code></td><td>Initiator ← Slave</td><td>Slave must have data armed via <code>slave_prepare_data_to_send()</code></td></tr>
+              <tr><td><code>BIDIRECTIONAL_STREAM</code><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup></td><td><code>initiate_transmission()</code></td><td>Initiator → Slave</td><td>No BURST ACK, no retry, higher throughput, no delivery guarantee</td></tr>
+              <tr><td><code>COM_ONE_WAY</code><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup></td><td><code>initiate_transmission()</code></td><td>Initiator → multiple</td><td>Broadcast; <code>filter_len</code> selects how many EUI MSB bits must match. Reception not supported.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note" style="margin-top:10px;">
+          <div class="adm-title">Note</div>
+          <p>Either call can be made while the device is also running slave periodic listening — the initiated exchange takes priority.</p>
+        </div>
+        <div class="warning" style="margin-top:8px;">
+          <div class="adm-title">Under development</div>
+          <p><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup> <code>BIDIRECTIONAL_STREAM</code> and <code>COM_ONE_WAY</code> modes are not yet validated and are under active development. Do not use in production.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-step">
+      <div class="role-step-num">2</div>
+      <div class="role-step-body">
+        <p>Run the same engine loop as the slave.</p>
+<pre><code>while( 1 )
+{
+    if( smtc_flrp_call_run() )
+        smtc_flrp_run_engine();
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="role-step">
+      <div class="role-step-num">3</div>
+      <div class="role-step-body">
+        <p><code>tx_callback</code> (or <code>rx_callback</code>) fires on exchange completion with the status, byte count, and link statistics.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Callbacks -->
+  <div class="gs-section">
+    <h3 id="gs-callbacks" class="gs-title shared">Common Callbacks</h3>
+    <p>Both callbacks are registered once in <code>smtc_flrp_init()</code> and are shared by both roles. <code>on_tx_done</code> fires on any completed transmission; <code>on_rx_done</code> fires on any completed reception. Check <code>status</code> first: payload data is only valid when <code>SMTC_FLRP_RC_OK</code>.</p>
+<pre><code>void on_tx_done( const void* ctx, smtc_flrp_return_code_t status,
+                 bool send_successful, uint8_t* dest_eui )
+{
+    if( status == SMTC_FLRP_RC_OK && send_successful )
+        /* data delivered to dest_eui */
+}
+
+void on_rx_done( const void* ctx, smtc_flrp_return_code_t status,
+                 uint32_t payload_size, uint8_t* src_eui,
+                 smtc_flrp_rx_stats_t stats )
+{
+    if( status == SMTC_FLRP_RC_OK )
+        /* rx_buf holds payload_size bytes from src_eui; stats has RSSI and burst PER */
+}</code></pre>
+  </div>
+
+  <hr />
+
+  <!-- EXAMPLES -->
+  <h2 id="examples">Examples</h2>
+  <p>Two ready-to-run examples are available, covering both bare-metal and Zephyr environments. Each example supports both roles on a single binary; the active role is selected at compile time.</p>
+
+  <h3 id="ex-baremetal">Bare-Metal</h3>
+  <p>
+    Repository: <a href="https://github.com/Lora-net/USP" target="_blank">github.com/Lora-net/USP</a> ·
+    Source: <code>examples/main_examples/flrp_api_example/</code> ·
+    Board: NUCLEO-L476 + LR2021
+  </p>
+  <p>Demonstrates periodic initiator-to-slave transfer (every 20 s by default) and on-demand transfer triggered by a button press on either device. Both roles listen for incoming transfers from the other side, so the example exercises the full bidirectional flow.</p>
+
+  <h3 id="ex-zephyr">Zephyr</h3>
+  <p>
+    Repository: <a href="https://github.com/Lora-net/USP_Zephyr" target="_blank">github.com/Lora-net/USP_Zephyr</a> ·
+    Source: <code>samples/usp/rac/flrp_api/</code> ·
+    Board: XIAO nRF54L15 + LoRa Plus EVK (LR2021)
+  </p>
+  <p>Same behaviour as the bare-metal example: periodic and button-triggered transfers in both directions, ported to the Zephyr RTOS. Demonstrates integration with the Zephyr radio driver abstraction and west build system.</p>
+
+  <hr />
+
+  <!-- POWER PROFILER -->
+  <h2 id="power-profiler">Power Profiler</h2>
+  <p>
+    The interactive power profiler below estimates initiator and slave energy consumption for a
+    given FLRP configuration. Adjust the TX interval, WOR preset, FLRC burst parameters, and
+    idle/sleep current to see battery life, average current, and a zoomed current waveform in
+    real time.
+  </p>
+  <div class="pp-embed">
+    <div class="layout">
+
+      <!-- LEFT PANEL -->
+      <div class="left">
+        <div class="general">
+          <span class="gen-title">General</span>
+          <div class="gen-row"><span>TX Power</span><span>+14 dBm</span></div>
+          <div class="gen-row"><span>Supply</span><span>3.3 V</span></div>
+          <div class="gen-row"><span>Direction</span><span>Initiator ↔ Slave</span></div>
+        </div>
+        <div class="accordion">
+
+          <div class="pp-section-hdr" style="background:var(--accent)">Initiator</div>
+
+          <details open>
+            <summary>
+              <span class="dot" style="background:var(--muted)"></span>
+              <span class="stitle">Schedule</span>
+              <span class="schevron">›</span>
+            </summary>
+            <div class="sec-body">
+              <div class="f">
+                <label>TX interval (s)</label>
+                <div class="row">
+                  <input type="range" id="s-int" min="5" max="3600" value="100" step="5">
+                  <input type="number" id="n-int" value="100" min="1">
+                  <span class="unit">s</span>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="dot" style="background:var(--col-wor)"></span>
+              <span class="stitle">WOR TX Duration</span>
+              <span class="scur" style="color:var(--col-wor)">27 mA</span>
+              <span class="schevron">›</span>
+            </summary>
+            <div class="sec-body">
+              <div class="f">
+                <label>Preset</label>
+                <select class="inline" id="sel-wor-preset">
+                  <option value="a">Preset A — 1 s / 950 ms, slave RX ~1.3 %</option>
+                  <option value="b" selected>Preset B — 100 ms / 80 ms, ~13 %</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              <div class="f">
+                <label>Duration (ms)</label>
+                <div class="row">
+                  <input type="range" id="s-wor-dur" min="10" max="5000" value="100" step="10" disabled>
+                  <input type="number" id="n-wor-dur" value="100" min="1" disabled>
+                  <span class="unit">ms</span>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="dot" style="background:var(--col-flrc)"></span>
+              <span class="stitle">FLRC TX</span>
+              <span class="scur" style="color:var(--col-flrc)">26 mA</span>
+              <span class="schevron">›</span>
+            </summary>
+            <div class="sec-body">
+              <div class="f">
+                <label>PHY bitrate</label>
+                <select class="inline" id="sel-rate">
+                  <option value="2600000" selected>2.6 Mbps</option>
+                  <option value="1300000">1.3 Mbps</option>
+                  <option value="650000">0.65 Mbps</option>
+                  <option value="325000">0.325 Mbps</option>
+                </select>
+              </div>
+              <div class="f">
+                <label>Coding rate (CR)</label>
+                <select class="inline" id="sel-cr">
+                  <option value="0.75" selected>3/4 (0.75)</option>
+                  <option value="0.667">2/3 (0.67)</option>
+                  <option value="0.5">1/2 (0.50)</option>
+                </select>
+              </div>
+              <div class="f">
+                <label>Total payload (bytes)</label>
+                <div class="row">
+                  <input type="range" id="s-payload" min="64" max="65536" value="20480" step="64">
+                  <input type="number" id="n-payload" value="20480" min="1">
+                  <span class="unit">B</span>
+                </div>
+              </div>
+              <div class="f">
+                <label>Packet size (bytes)</label>
+                <div class="row">
+                  <input type="range" id="s-pktsize" min="16" max="512" value="400" step="16">
+                  <input type="number" id="n-pktsize" value="400" min="1" max="512">
+                  <span class="unit">B</span>
+                </div>
+              </div>
+              <div class="f">
+                <label>Inter-frame spacing (µs)</label>
+                <div class="row">
+                  <input type="range" id="s-ifs" min="50" max="2000" value="180" step="10">
+                  <input type="number" id="n-ifs" value="180" min="0">
+                  <span class="unit">µs</span>
+                </div>
+              </div>
+              <span class="fixed-badge" id="badge-toa">TOA — ms · <b>26 mA</b></span>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="dot" style="background:var(--col-idle)"></span>
+              <span class="stitle">Idle / Sleep</span>
+              <span class="scur" style="color:var(--col-idle)">2 µA default</span>
+              <span class="schevron">›</span>
+            </summary>
+            <div class="sec-body">
+              <div class="f">
+                <label>Current (µA)</label>
+                <div class="row">
+                  <input type="range" id="s-idle" min="1" max="500" value="2" step="1">
+                  <input type="number" id="n-idle" value="2" min="0.001" step="1">
+                  <span class="unit">µA</span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- SLAVE TX TOGGLE -->
+          <div class="pp-slave-toggle">
+            <label>
+              <input type="checkbox" id="chk-slave-tx">
+              <span>Slave TX &amp; Initiator CAD</span>
+            </label>
+          </div>
+
+          <!-- SLAVE SETTINGS (shown when toggle enabled) -->
+          <div id="pp-slave-panel" style="display:none">
+            <div class="pp-section-hdr" style="background:var(--col-cad)">Slave</div>
+
+            <details open>
+              <summary>
+                <span class="dot" style="background:var(--muted)"></span>
+                <span class="stitle">Schedule</span>
+                <span class="schevron">›</span>
+              </summary>
+              <div class="sec-body">
+                <div class="f">
+                  <label>TX interval (s)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-int" min="5" max="3600" value="20" step="5">
+                    <input type="number" id="n-sv-int" value="20" min="1">
+                    <span class="unit">s</span>
+                  </div>
+                </div>
+              </div>
+            </details>
+            <details>
+              <summary>
+                <span class="dot" style="background:var(--col-wor)"></span>
+                <span class="stitle">WOR TX Duration</span>
+                <span class="scur" style="color:var(--col-wor)">27 mA</span>
+                <span class="schevron">›</span>
+              </summary>
+              <div class="sec-body">
+                <div class="f">
+                  <label>Preset</label>
+                  <select class="inline" id="sel-sv-wor-preset">
+                    <option value="a" selected>Preset A — 1 s / 950 ms, ~1.3 %</option>
+                    <option value="b">Preset B — 100 ms / 80 ms, ~13 %</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+                <div class="f">
+                  <label>Duration (ms)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-wor-dur" min="10" max="5000" value="1000" step="10" disabled>
+                    <input type="number" id="n-sv-wor-dur" value="1000" min="1" disabled>
+                    <span class="unit">ms</span>
+                  </div>
+                </div>
+              </div>
+            </details>
+            <details>
+              <summary>
+                <span class="dot" style="background:var(--col-flrc)"></span>
+                <span class="stitle">FLRC TX</span>
+                <span class="scur" style="color:var(--col-flrc)">26 mA</span>
+                <span class="schevron">›</span>
+              </summary>
+              <div class="sec-body">
+                <div class="f">
+                  <label>PHY bitrate</label>
+                  <select class="inline" id="sel-sv-rate">
+                    <option value="2600000" selected>2.6 Mbps</option>
+                    <option value="1300000">1.3 Mbps</option>
+                    <option value="650000">0.65 Mbps</option>
+                    <option value="325000">0.325 Mbps</option>
+                  </select>
+                </div>
+                <div class="f">
+                  <label>Coding rate (CR)</label>
+                  <select class="inline" id="sel-sv-cr">
+                    <option value="0.75" selected>3/4 (0.75)</option>
+                    <option value="0.667">2/3 (0.67)</option>
+                    <option value="0.5">1/2 (0.50)</option>
+                  </select>
+                </div>
+                <div class="f">
+                  <label>Total payload (bytes)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-payload" min="64" max="65536" value="20480" step="64">
+                    <input type="number" id="n-sv-payload" value="20480" min="1">
+                    <span class="unit">B</span>
+                  </div>
+                </div>
+                <div class="f">
+                  <label>Packet size (bytes)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-pktsize" min="16" max="512" value="400" step="16">
+                    <input type="number" id="n-sv-pktsize" value="400" min="1" max="512">
+                    <span class="unit">B</span>
+                  </div>
+                </div>
+                <div class="f">
+                  <label>Inter-frame spacing (µs)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-ifs" min="50" max="2000" value="180" step="10">
+                    <input type="number" id="n-sv-ifs" value="180" min="0">
+                    <span class="unit">µs</span>
+                  </div>
+                </div>
+                <span class="fixed-badge" id="badge-sv-toa">TOA — ms · <b>26 mA</b></span>
+              </div>
+            </details>
+            <details>
+              <summary>
+                <span class="dot" style="background:var(--col-idle)"></span>
+                <span class="stitle">Idle / Sleep</span>
+                <span class="scur" style="color:var(--col-idle)">100 µA default</span>
+                <span class="schevron">›</span>
+              </summary>
+              <div class="sec-body">
+                <div class="f">
+                  <label>Current (µA)</label>
+                  <div class="row">
+                    <input type="range" id="s-sv-idle" min="1" max="1000" value="100" step="1">
+                    <input type="number" id="n-sv-idle" value="100" min="0.001" step="1">
+                    <span class="unit">µA</span>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div><!-- /pp-slave-panel -->
+
+        </div><!-- /accordion -->
+      </div><!-- /left -->
+
+      <!-- RIGHT PANEL -->
+      <div class="right">
+
+        <!-- INITIATOR -->
+        <span class="row-label" style="color:var(--accent)">Initiator</span>
+        <div class="results-init">
+          <div class="sc primary-init">
+            <span class="sc-lbl">Battery life</span>
+            <span class="sc-val" id="out-life">—</span>
+            <span class="cap-note">1000 mAH battery capacity</span>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">Avg current</span>
+                <span class="sc-val" id="out-avg">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Energy / cycle</span>
+                <span class="sc-val"><span id="out-cyclemah">—</span> µAh</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">TX duration</span>
+                <span class="sc-val" id="out-txtime">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Latency</span>
+                <span class="sc-val" id="out-latency">—</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">FLRC burst eff. baud rate</span>
+                <span class="sc-val" id="out-flrc-eff">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Net throughput</span>
+                <span class="sc-val" id="out-net-tput">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-role" id="init-chart-role" style="color:var(--accent)">Initiator — TX cycle</span>
+            <div class="legend">
+              <span><span class="lsw" style="background:var(--col-wor)"></span>WOR TX</span>
+              <span><span class="lsw" style="background:var(--col-ack)"></span>ACK + CH Sel</span>
+              <span><span class="lsw" style="background:var(--col-flrc)"></span>FLRC TX</span>
+              <span><span class="lsw" style="background:var(--col-cad)"></span>CAD</span>
+              <span><span class="lsw" style="background:var(--col-idle)"></span>Sleep</span>
+            </div>
+          </div>
+          <div class="canvas-wrap"><canvas id="cv-init"></canvas></div>
+        </div>
+
+        <!-- SLAVE -->
+        <span class="row-label" style="color:var(--col-cad)">Slave</span>
+        <!-- Compact bar — visible when Slave TX disabled -->
+        <div class="slave-bar" id="pp-slave-bar">
+          <div class="sb-item">
+            <span class="sb-lbl">Avg current</span>
+            <span class="sb-val" id="s-out-avg">—</span>
+          </div>
+          <div class="sb-item">
+            <span class="sb-lbl">Energy / cycle</span>
+            <span class="sb-val"><span id="s-out-cyclemah">—</span> µAh</span>
+          </div>
+        </div>
+        <!-- Full results — visible when Slave TX enabled -->
+        <div class="results-init" id="pp-slave-results" style="display:none">
+          <div class="sc primary-sv">
+            <span class="sc-lbl">Battery life</span>
+            <span class="sc-val" id="sv-out-life">—</span>
+            <span class="cap-note">1000 mAH battery capacity</span>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">Avg current</span>
+                <span class="sc-val" id="sv-out-avg">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Energy / cycle</span>
+                <span class="sc-val"><span id="sv-out-cyclemah">—</span> µAh</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">TX duration</span>
+                <span class="sc-val" id="sv-out-txtime">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Latency</span>
+                <span class="sc-val" id="sv-out-latency">—</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-group">
+              <div class="sc-item">
+                <span class="sc-lbl">FLRC burst eff. baud rate</span>
+                <span class="sc-val" id="sv-out-flrc-eff">—</span>
+              </div>
+              <div class="sc-sep"></div>
+              <div class="sc-item">
+                <span class="sc-lbl">Net throughput</span>
+                <span class="sc-val" id="sv-out-net-tput">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slave chart — always visible -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-role" id="slave-chart-role" style="color:var(--col-cad)">Slave — CAD pattern</span>
+            <div class="legend">
+              <span><span class="lsw" style="background:var(--col-wor)"></span>WOR TX</span>
+              <span><span class="lsw" style="background:var(--col-ack)"></span>ACK + CH Sel</span>
+              <span><span class="lsw" style="background:var(--col-flrc)"></span>FLRC TX</span>
+              <span><span class="lsw" style="background:var(--col-cad)"></span>CAD</span>
+              <span><span class="lsw" style="background:var(--col-idle)"></span>Sleep</span>
+            </div>
+          </div>
+          <div class="canvas-wrap"><canvas id="cv-slave"></canvas></div>
+        </div>
+
+      </div><!-- /right -->
+
+    </div><!-- /layout -->
+  </div><!-- /pp-embed -->
+  <script>
+  (function () {
+    const WOR_MA  = 27, ACK_MA = 3, FLRC_MA = 26, CAD_MA = 6, CAD_MS = 15, RX_MA = 10;
+    const MAX_CUR = Math.max(WOR_MA, FLRC_MA) * 1.22;
+    const BAT_MAH = 1000;
+
+    const cvInit  = document.getElementById('cv-init');
+    const cvSlave = document.getElementById('cv-slave');
+
+    const PRESETS_WOR = { a: 1000, b: 100 };
+
+    document.getElementById('sel-wor-preset').addEventListener('change', function () {
+      const key = this.value, isCustom = key === 'custom';
+      document.getElementById('s-wor-dur').disabled = !isCustom;
+      document.getElementById('n-wor-dur').disabled = !isCustom;
+      if (!isCustom) {
+        const ms = PRESETS_WOR[key];
+        document.getElementById('s-wor-dur').value = ms;
+        document.getElementById('n-wor-dur').value = ms;
+      }
+      calc();
+    });
+
+    document.getElementById('sel-sv-wor-preset').addEventListener('change', function () {
+      const key = this.value, isCustom = key === 'custom';
+      document.getElementById('s-sv-wor-dur').disabled = !isCustom;
+      document.getElementById('n-sv-wor-dur').disabled = !isCustom;
+      if (!isCustom) {
+        const ms = PRESETS_WOR[key];
+        document.getElementById('s-sv-wor-dur').value = ms;
+        document.getElementById('n-sv-wor-dur').value = ms;
+      }
+      calc();
+    });
+
+    document.getElementById('chk-slave-tx').addEventListener('change', function () {
+      const on = this.checked;
+      document.getElementById('pp-slave-panel').style.display   = on ? '' : 'none';
+      document.getElementById('pp-slave-bar').style.display     = on ? 'none' : '';
+      document.getElementById('pp-slave-results').style.display = on ? '' : 'none';
+      document.querySelector('.pp-embed').classList.toggle('pp-expanded', on);
+      calc();
+    });
+
+    function fmtBps(bps) { return bps >= 1e6 ? (bps/1e6).toFixed(1)+' Mbps' : bps >= 1e3 ? Math.round(bps/1e3)+' kbps' : Math.round(bps)+' bps'; }
+    function fmtLife(h)  { return Math.round(h / 24)+' days'; }
+    function fmtCur(ma)  { return ma < 1 ? Math.round(ma*1000)+' µA' : Math.round(ma)+' mA'; }
+
+    function getVals() {
+      return {
+        cap:       BAT_MAH,
+        intSec:    parseFloat(document.getElementById('n-int').value)        || 100,
+        worMs:     parseFloat(document.getElementById('n-wor-dur').value)    || 1000,
+        ackMs:     60,
+        idleUa:    parseFloat(document.getElementById('n-idle').value)       || 2,
+        payload:   parseFloat(document.getElementById('n-payload').value)    || 20480,
+        pktsize:   parseFloat(document.getElementById('n-pktsize').value)    || 400,
+        ifsUs:     parseFloat(document.getElementById('n-ifs').value)        || 180,
+        phyRate:   parseFloat(document.getElementById('sel-rate').value)     || 2600000,
+        cr:        parseFloat(document.getElementById('sel-cr').value)       || 0.75,
+        slaveTxOn: document.getElementById('chk-slave-tx').checked,
+        svIntSec:  parseFloat(document.getElementById('n-sv-int').value)     || 20,
+        svWorMs:   parseFloat(document.getElementById('n-sv-wor-dur').value) || 1000,
+        svIdleUa:  parseFloat(document.getElementById('n-sv-idle').value)    || 100,
+        svPayload: parseFloat(document.getElementById('n-sv-payload').value) || 20480,
+        svPktsize: parseFloat(document.getElementById('n-sv-pktsize').value) || 400,
+        svIfsUs:   parseFloat(document.getElementById('n-sv-ifs').value)     || 180,
+        svPhyRate: parseFloat(document.getElementById('sel-sv-rate').value)  || 2600000,
+        svCr:      parseFloat(document.getElementById('sel-sv-cr').value)    || 0.75,
+      };
+    }
+
+    function calcFlrcToa(payload, pktsize, phyRate, cr, ifsUs) {
+      const effRate = phyRate * cr, nPkts = Math.ceil(payload / pktsize);
+      const rawOh = (512 + 64) / phyRate, fecOh = 16 / effRate;
+      let dataS = Math.floor(payload/pktsize) * (pktsize*8) / effRate;
+      if (payload % pktsize) dataS += ((payload%pktsize)*8) / effRate;
+      return (dataS + nPkts*(rawOh+fecOh) + (nPkts-1)*ifsUs/1e6) * 1000;
+    }
+
+    function drawChart(canvas, segments, showMs, showXAxis, xMarkers, dashedRight) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.offsetWidth || 600, h = canvas.offsetHeight || 120;
+      canvas.width  = w * window.devicePixelRatio;
+      canvas.height = h * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      ctx.clearRect(0, 0, w, h);
+      const PAD_L = 52, PAD_R = 16, PAD_T = 10, PAD_B = showXAxis ? 30 : 5;
+      const plotW = w - PAD_L - PAD_R, plotH = h - PAD_T - PAD_B;
+      const xOf = ms => PAD_L + (Math.min(ms, showMs) / showMs) * plotW;
+      const yOf = ma  => PAD_T + plotH - (ma / MAX_CUR) * plotH;
+      ctx.fillStyle = '#f8f9fb';
+      ctx.fillRect(PAD_L, PAD_T, plotW, plotH);
+      const yTicks = [0,5,10,15,20,25,30].filter(v => v <= MAX_CUR);
+      ctx.strokeStyle = '#e2e5ea'; ctx.lineWidth = 0.5; ctx.setLineDash([3,3]);
+      yTicks.forEach(ma => { const y = yOf(ma); ctx.beginPath(); ctx.moveTo(PAD_L,y); ctx.lineTo(PAD_L+plotW,y); ctx.stroke(); });
+      ctx.setLineDash([]);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.font = '10px monospace'; ctx.fillStyle = '#6B7280';
+      yTicks.forEach(ma => ctx.fillText(ma+' mA', PAD_L-5, yOf(ma)));
+      let cursor = 0;
+      segments.forEach(seg => {
+        const x0 = xOf(cursor), x1 = xOf(cursor+seg.ms), y0 = yOf(seg.ma), yBase = yOf(0);
+        ctx.fillStyle = seg.color+'28'; ctx.fillRect(x0, y0, x1-x0, yBase-y0);
+        ctx.strokeStyle = seg.color; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y0); ctx.stroke();
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(x0,yBase); ctx.lineTo(x0,y0); ctx.stroke();
+        cursor += seg.ms;
+      });
+      ctx.strokeStyle = '#c4c9d8'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PAD_L,yOf(0)); ctx.lineTo(PAD_L+plotW,yOf(0)); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.font = '9px monospace'; ctx.fillStyle = '#6B7280';
+      xMarkers.forEach(m => {
+        if (m.ms > showMs) return;
+        const x = xOf(m.ms);
+        ctx.strokeStyle = '#dde1ea'; ctx.lineWidth = 0.5; ctx.setLineDash([2,2]);
+        ctx.beginPath(); ctx.moveTo(x,PAD_T); ctx.lineTo(x,PAD_T+plotH); ctx.stroke();
+        ctx.setLineDash([]);
+        if (showXAxis) ctx.fillText(m.label, x, PAD_T+plotH+4);
+      });
+      ctx.strokeStyle = '#c4c9d8'; ctx.lineWidth = 1; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(PAD_L+plotW,PAD_T); ctx.lineTo(PAD_L,PAD_T); ctx.lineTo(PAD_L,PAD_T+plotH); ctx.lineTo(PAD_L+plotW,PAD_T+plotH); ctx.stroke();
+      if (dashedRight) { ctx.setLineDash([4,3]); ctx.strokeStyle = '#bcc2d4'; }
+      ctx.beginPath(); ctx.moveTo(PAD_L+plotW,PAD_T); ctx.lineTo(PAD_L+plotW,PAD_T+plotH); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Append CAD pulses to txSegs filling idleShowMs
+    function makeCombinedSegs(txSegs, idleShowMs, cadPeriodMs, cadSleepMs, idleMa) {
+      const segs = [...txSegs];
+      let rem = idleShowMs;
+      while (rem > 0.5) {
+        const sl = Math.min(cadSleepMs, rem);
+        segs.push({ ms: sl, ma: idleMa, color: '#bcc2d4' });
+        rem -= sl;
+        if (rem < 0.5) break;
+        segs.push({ ms: Math.min(CAD_MS, rem), ma: CAD_MA, color: '#6366f1' });
+        rem -= CAD_MS;
+      }
+      return segs;
+    }
+
+    function calc() {
+      const v      = getVals();
+      const flrcMs = calcFlrcToa(v.payload, v.pktsize, v.phyRate, v.cr, v.ifsUs);
+      const txMs   = v.worMs + v.ackMs + flrcMs;
+      const idleSec = Math.max(0, v.intSec - txMs/1000);
+      const idleMa  = v.idleUa / 1000;
+
+      // Slave CAD period driven by initiator's WOR TX duration
+      const slaveCadPeriodMs = 0.9 * v.worMs;
+      const slaveCadSleepMs  = slaveCadPeriodMs - CAD_MS;
+
+      // === INITIATOR ENERGY ===
+      const worMah  = WOR_MA  * (v.worMs/1000/3600);
+      const ackMah  = ACK_MA  * (v.ackMs/1000/3600);
+      const flrcMah = FLRC_MA * (flrcMs/1000/3600);
+
+      let iCycleMah;
+      if (v.slaveTxOn) {
+        const initCadPeriodMs = 0.9 * v.svWorMs;
+        const initCadSleepMs  = initCadPeriodMs - CAD_MS;
+        const nInitCad     = (idleSec * 1000) / initCadPeriodMs;
+        const initCadMah   = nInitCad * CAD_MS         / 1000 / 3600 * CAD_MA;
+        const initSleepMah = nInitCad * initCadSleepMs / 1000 / 3600 * idleMa;
+        iCycleMah = worMah + ackMah + flrcMah + initCadMah + initSleepMah;
+      } else {
+        iCycleMah = worMah + ackMah + flrcMah + idleMa * (idleSec / 3600);
+      }
+      const iAvgMa = iCycleMah / (v.intSec / 3600);
+      const iLifeH = v.cap / iAvgMa;
+
+      // === SLAVE COMPACT (CAD only) ===
+      const nCadPerInt = (v.intSec * 1000) / slaveCadPeriodMs;
+      const sCadMah    = nCadPerInt * CAD_MS          / 1000 / 3600 * CAD_MA;
+      const sSleepMah  = nCadPerInt * slaveCadSleepMs / 1000 / 3600 * idleMa;
+      const sAckMah    = v.ackMs / 1000 / 3600 * WOR_MA;
+      const sRxMah     = flrcMs  / 1000 / 3600 * RX_MA;
+      const sCycleMah  = sCadMah + sSleepMah + sAckMah + sRxMah;
+      const sAvgMa     = sCycleMah / (v.intSec / 3600);
+
+      const nPkts      = Math.ceil(v.payload / v.pktsize);
+      const flrcEffBps = (v.payload * 8) / (flrcMs / 1000);
+      const netTputBps = (v.payload * 8) / (txMs   / 1000);
+
+      document.getElementById('badge-toa').innerHTML   = 'TOA <b>'+Math.round(flrcMs)+' ms</b> · '+nPkts+' pkts · <b>26 mA</b>';
+      document.getElementById('out-life').textContent      = fmtLife(iLifeH);
+      document.getElementById('out-avg').textContent       = fmtCur(iAvgMa);
+      document.getElementById('out-cyclemah').textContent  = Math.round(iCycleMah*1000);
+      document.getElementById('out-txtime').textContent    = Math.round(txMs)+' ms';
+      document.getElementById('out-latency').textContent   = Math.round(v.worMs+v.ackMs)+' ms';
+      document.getElementById('out-flrc-eff').textContent  = fmtBps(flrcEffBps);
+      document.getElementById('out-net-tput').textContent  = fmtBps(netTputBps);
+      document.getElementById('s-out-avg').textContent     = fmtCur(sAvgMa);
+      document.getElementById('s-out-cyclemah').textContent= Math.round(sCycleMah*1000);
+
+      // === INITIATOR CHART (TX + CAD in idle) ===
+      const initTxSegs = [
+        { ms: v.worMs, ma: WOR_MA,  color: '#00AFAA' },
+        { ms: v.ackMs, ma: ACK_MA,  color: '#0b9e6b' },
+        { ms: flrcMs,  ma: FLRC_MA, color: '#d47c09' },
+      ];
+      let initSegs, initShowMs;
+      if (v.slaveTxOn) {
+        const initCadPeriodMs = 0.9 * v.svWorMs;
+        const initCadSleepMs  = initCadPeriodMs - CAD_MS;
+        const idleShowMs = Math.min(idleSec*1000, Math.max(2*initCadPeriodMs, txMs));
+        initSegs   = makeCombinedSegs(initTxSegs, idleShowMs, initCadPeriodMs, initCadSleepMs, idleMa);
+        initShowMs = txMs + idleShowMs;
+        document.getElementById('init-chart-role').textContent = 'Initiator — TX + idle CAD';
+      } else {
+        const idleShowMs = Math.min(idleSec*1000, Math.max(30, txMs*0.18));
+        initSegs   = [...initTxSegs, { ms: idleShowMs, ma: idleMa, color: '#bcc2d4' }];
+        initShowMs = txMs + idleShowMs;
+        document.getElementById('init-chart-role').textContent = 'Initiator — TX cycle';
+      }
+      drawChart(cvInit, initSegs, initShowMs, true, [
+        { ms: 0,               label: '0' },
+        { ms: v.worMs,         label: Math.round(v.worMs)+' ms' },
+        { ms: v.worMs+v.ackMs, label: Math.round(v.worMs+v.ackMs)+' ms' },
+        { ms: txMs,            label: Math.round(txMs)+' ms' },
+      ], true);
+
+      // === SLAVE CHART (TX + CAD in idle, or CAD only) ===
+      if (v.slaveTxOn) {
+        const svFlrcMs  = calcFlrcToa(v.svPayload, v.svPktsize, v.svPhyRate, v.svCr, v.svIfsUs);
+        const svTxMs    = v.svWorMs + v.ackMs + svFlrcMs;
+        const svIdleSec = Math.max(0, v.svIntSec - svTxMs / 1000);
+        const svIdleMa  = v.svIdleUa / 1000;
+
+        // Slave TX energy
+        const svWorTxMah = WOR_MA  * (v.svWorMs / 1000 / 3600);
+        const svAckMah   = ACK_MA  * (v.ackMs   / 1000 / 3600);
+        const svFlrcMah  = FLRC_MA * (svFlrcMs  / 1000 / 3600);
+        const nSvCad       = (svIdleSec * 1000) / slaveCadPeriodMs;
+        const svCadIdleMah = nSvCad * CAD_MS          / 1000 / 3600 * CAD_MA;
+        const svSlpIdleMah = nSvCad * slaveCadSleepMs / 1000 / 3600 * svIdleMa;
+        const svCycleMah   = svWorTxMah + svAckMah + svFlrcMah + svCadIdleMah + svSlpIdleMah;
+        const svAvgMa      = svCycleMah / (v.svIntSec / 3600);
+        const svLifeH      = v.cap / svAvgMa;
+        const svNpkts      = Math.ceil(v.svPayload / v.svPktsize);
+        const svFlrcEff    = (v.svPayload * 8) / (svFlrcMs / 1000);
+        const svNetTput    = (v.svPayload * 8) / (svTxMs   / 1000);
+
+        document.getElementById('badge-sv-toa').innerHTML   = 'TOA <b>'+Math.round(svFlrcMs)+' ms</b> · '+svNpkts+' pkts · <b>26 mA</b>';
+        document.getElementById('sv-out-life').textContent      = fmtLife(svLifeH);
+        document.getElementById('sv-out-avg').textContent       = fmtCur(svAvgMa);
+        document.getElementById('sv-out-cyclemah').textContent  = Math.round(svCycleMah*1000);
+        document.getElementById('sv-out-txtime').textContent    = Math.round(svTxMs)+' ms';
+        document.getElementById('sv-out-latency').textContent   = Math.round(v.svWorMs+v.ackMs)+' ms';
+        document.getElementById('sv-out-flrc-eff').textContent  = fmtBps(svFlrcEff);
+        document.getElementById('sv-out-net-tput').textContent  = fmtBps(svNetTput);
+
+        const svIdleShowMs = Math.min(svIdleSec*1000, Math.max(2*slaveCadPeriodMs, svTxMs));
+        const svTxSegs = [
+          { ms: v.svWorMs, ma: WOR_MA,  color: '#00AFAA' },
+          { ms: v.ackMs,   ma: ACK_MA,  color: '#0b9e6b' },
+          { ms: svFlrcMs,  ma: FLRC_MA, color: '#d47c09' },
+        ];
+        const svSegs = makeCombinedSegs(svTxSegs, svIdleShowMs, slaveCadPeriodMs, slaveCadSleepMs, svIdleMa);
+        document.getElementById('slave-chart-role').textContent = 'Slave — TX + idle CAD';
+        drawChart(cvSlave, svSegs, svTxMs+svIdleShowMs, true, [
+          { ms: 0,                  label: '0' },
+          { ms: v.svWorMs,          label: Math.round(v.svWorMs)+' ms' },
+          { ms: v.svWorMs+v.ackMs,  label: Math.round(v.svWorMs+v.ackMs)+' ms' },
+          { ms: svTxMs,             label: Math.round(svTxMs)+' ms' },
+        ], true);
+      } else {
+        const svIdleMaForCad = idleMa;
+        const slaveSegs = [];
+        for (let i = 0; i < 4; i++) {
+          slaveSegs.push({ ms: slaveCadSleepMs, ma: svIdleMaForCad, color: '#bcc2d4' });
+          slaveSegs.push({ ms: CAD_MS,          ma: CAD_MA,          color: '#6366f1' });
+        }
+        document.getElementById('slave-chart-role').textContent = 'Slave — CAD pattern';
+        drawChart(cvSlave, slaveSegs, 3.5*slaveCadPeriodMs, true,
+          [0,1,2,3,4].map(i => ({ ms: i*slaveCadPeriodMs, label: Math.round(i*slaveCadPeriodMs)+' ms' })), false);
+      }
+    }
+
+    function link(sId, nId) {
+      const s = document.getElementById(sId), n = document.getElementById(nId);
+      if (!s || !n) return;
+      s.addEventListener('input', () => { n.value = s.value; calc(); });
+      n.addEventListener('input', () => { s.value = n.value; calc(); });
+    }
+
+    // Initiator controls
+    link('s-wor-dur','n-wor-dur'); link('s-int','n-int'); link('s-idle','n-idle');
+    link('s-payload','n-payload'); link('s-pktsize','n-pktsize'); link('s-ifs','n-ifs');
+    document.getElementById('sel-rate').addEventListener('change', calc);
+    document.getElementById('sel-cr').addEventListener('change', calc);
+
+    // Slave controls
+    link('s-sv-wor-dur','n-sv-wor-dur'); link('s-sv-int','n-sv-int'); link('s-sv-idle','n-sv-idle');
+    link('s-sv-payload','n-sv-payload'); link('s-sv-pktsize','n-sv-pktsize'); link('s-sv-ifs','n-sv-ifs');
+    document.getElementById('sel-sv-rate').addEventListener('change', calc);
+    document.getElementById('sel-sv-cr').addEventListener('change', calc);
+
+    const ro = new ResizeObserver(() => calc());
+    ro.observe(cvInit.parentElement);
+    ro.observe(cvSlave.parentElement);
+    calc();
+  })();
+  </script>
+
+  <hr />
+
+  <!-- API REFERENCE -->
+  <h2 id="api">API Reference</h2>
+  <p>Header: <code>protocols/smtc_flrc_protocol/smtc_flrp_api/smtc_flrp_api.h</code></p>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_init</span>(<br/>
+    &nbsp;&nbsp;<span class="type">smtc_flrp_api_config_t</span> config,<br/>
+    &nbsp;&nbsp;<span class="type">smtc_flrp_tx_done_f</span> tx_callback,<br/>
+    &nbsp;&nbsp;<span class="type">smtc_flrp_rx_done_f</span> rx_callback,<br/>
+    &nbsp;&nbsp;<span class="type">void*</span> user_context );
+  </div>
+  <div class="api-body">
+    <p>Initialize the protocol and register callbacks. Must be called first.</p>
+    <ul>
+      <li><code>config</code>: DevEUI, crypto flag, frequency plan, crystal error (ppm)</li>
+      <li><code>tx_callback</code>: called on TX completion with status, success flag, and destination DevEUI</li>
+      <li><code>rx_callback</code>: called on RX completion with status, payload size, source DevEUI, and Rx stats</li>
+      <li>Returns <code>SMTC_FLRP_RC_OK</code> on success</li>
+    </ul>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_start_periodic_listening</span>(<br/>
+    &nbsp;&nbsp;<span class="type">uint8_t*</span> payload, <span class="type">uint32_t</span> payload_size );
+  </div>
+  <div class="api-body">
+    <p>Start LoRa periodic CAD active-sleep listening (slave role). Returns <code>RC_BUSY</code> if a reception cannot be scheduled.</p>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_stop_periodic_listening</span>( <span class="type">void</span> );
+  </div>
+  <div class="api-body"><p>Stop the periodic listening loop.</p></div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_slave_prepare_data_to_send</span>(<br/>
+    &nbsp;&nbsp;<span class="type">uint8_t*</span> payload, <span class="type">uint32_t</span> payload_size );
+  </div>
+  <div class="api-body">
+    <p>Pre-arm a payload on the slave to be sent when the initiator requests data. Pass <code>payload_size = 0</code> to unset.</p>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_initiate_transmission</span>(<br/>
+    &nbsp;&nbsp;<span class="type">uint8_t*</span> payload, <span class="type">uint32_t</span> payload_size,<br/>
+    &nbsp;&nbsp;<span class="type">smtc_flrp_com_config_t</span> com_config );
+  </div>
+  <div class="api-body">
+    <p>Start a transmission (initiator → slave). Returns <code>RC_BUSY</code> if an exchange is already in progress.</p>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_initiate_reception</span>(<br/>
+    &nbsp;&nbsp;<span class="type">uint8_t*</span> payload, <span class="type">uint32_t</span> payload_size,<br/>
+    &nbsp;&nbsp;<span class="type">smtc_flrp_com_config_t</span> com_config );
+  </div>
+  <div class="api-body">
+    <p>Start a reception (initiator requests data from slave). Unicast only; <code>SMTC_FLRP_BIDIRECTIONAL</code> mode required.</p>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">void</span> <span class="fn">smtc_flrp_run_engine</span>( <span class="type">void</span> );<br/><br/>
+    <span class="ret">bool</span> <span class="fn">smtc_flrp_call_run</span>( <span class="type">void</span> );
+  </div>
+  <div class="api-body">
+    <p><code>smtc_flrp_call_run()</code> returns <code>true</code> when the engine has a time-critical operation pending. Call <code>smtc_flrp_run_engine()</code> immediately when it does.</p>
+  </div>
+
+  <div class="api-sig">
+    <span class="ret">smtc_flrp_radio_config_t</span> <span class="fn">smtc_flrp_get_current_radio_config</span>( <span class="type">void</span> );<br/><br/>
+    <span class="ret">smtc_flrp_return_code_t</span> <span class="fn">smtc_flrp_set_new_radio_config</span>( <span class="type">smtc_flrp_radio_config_t</span> config );
+  </div>
+  <div class="api-body">
+    <p>Read or update radio parameters (channels, datarate, TX power, delays, PER target, WOR LoRa settings). Cannot be applied during an ongoing exchange; returns <code>RC_BUSY</code>.</p>
+  </div>
+
+  <h3 class="gs-title role">Types &amp; Enumerations</h3>
+
+  <p style="font-size:13px;font-weight:700;margin:14px 0 4px;"><code>smtc_flrp_return_code_t</code></p>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Returned by all API functions except <code>smtc_flrp_run_engine()</code> and <code>smtc_flrp_call_run()</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>SMTC_FLRP_RC_OK</code></td><td>Success</td></tr>
+        <tr><td><code>SMTC_FLRP_RC_NOT_INIT</code></td><td>Called before <code>smtc_flrp_init()</code></td></tr>
+        <tr><td><code>SMTC_FLRP_RC_BUSY</code></td><td>Exchange in progress or radio busy</td></tr>
+        <tr><td><code>SMTC_FLRP_RC_INVALID_PARAMS</code></td><td>Parameter out of range or inconsistent</td></tr>
+        <tr><td><code>SMTC_FLRP_RC_UNSUPPORTED_FEATURE</code></td><td>Feature not available in this build</td></tr>
+        <tr><td><code>SMTC_FLRP_RC_ERROR</code></td><td>Unspecified error</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;margin:18px 0 4px;"><code>smtc_flrp_freq_plan_t</code>, field <code>.freq_plan</code> in <code>smtc_flrp_api_config_t</code></p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Value</th><th>Band</th></tr></thead>
+      <tbody>
+        <tr><td><code>SMTC_FLRP_FREQ_470MHz</code></td><td>Sub-GHz, 470 MHz</td></tr>
+        <tr><td><code>SMTC_FLRP_FREQ_865MHz</code></td><td>Sub-GHz, 865 MHz</td></tr>
+        <tr><td><code>SMTC_FLRP_FREQ_915MHz</code></td><td>Sub-GHz, 915 MHz</td></tr>
+        <tr><td><code>SMTC_FLRP_FREQ_2GHz4</code></td><td>2.4 GHz</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;margin:18px 0 4px;"><code>smtc_flrp_com_mode_t</code>, field <code>.com_mode</code> in <code>smtc_flrp_com_config_t</code></p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Value</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>SMTC_FLRP_BIDIRECTIONAL</code></td><td>Unicast with BURST ACK and retry. Supports both <code>initiate_transmission()</code> and <code>initiate_reception()</code>.</td></tr>
+        <tr><td><code>SMTC_FLRP_BIDIRECTIONAL_STREAM</code><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup></td><td>Unicast without BURST ACK, higher throughput, no delivery guarantee. Transmission only.</td></tr>
+        <tr><td><code>SMTC_FLRP_COM_ONE_WAY</code><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup></td><td>Broadcast, no WOR ACK. Addressed by DevEUI prefix (<code>filter_len</code> MSB bits). Transmission only.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warning" style="margin-top:8px;margin-bottom:16px;">
+    <div class="adm-title">Under development</div>
+    <p><sup style="color:#E85D04;font-weight:700;font-size:1.1em">*</sup> <code>SMTC_FLRP_BIDIRECTIONAL_STREAM</code> and <code>SMTC_FLRP_COM_ONE_WAY</code> are not yet validated and are under active development. Do not use in production.</p>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;margin:18px 0 4px;"><code>smtc_flrp_link_adaptation_mode_t</code>, field <code>.link_adaptation_mode</code> in <code>smtc_flrp_com_config_t</code></p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Value</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>SMTC_FLRP_LINK_ADAPTATION_FULLY_ENABLED</code></td><td>Channel + datarate selection (default)</td></tr>
+        <tr><td><code>SMTC_FLRP_LINK_ADAPTATION_DISABLED</code></td><td>Skip Phase 2 entirely</td></tr>
+        <tr><td><code>SMTC_FLRP_LINK_ADAPTATION_CHANNEL_SELECTION_ONLY</code></td><td>Select channel, use configured datarate</td></tr>
+        <tr><td><code>SMTC_FLRP_LINK_ADAPTATION_DATARATE_SELECTION_ONLY</code></td><td>Select datarate, use configured channel</td></tr>
+        <tr><td><code>SMTC_FLRP_LINK_ADAPTATION_ENABLED_WITHOUT_SELECTION</code></td><td>Run Phase 2 sequence, apply no selection</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr />
+
+  <!-- LIMITATIONS -->
+  <footer>
+    <div class="footer-brand">Semtech Corporation</div>
+    <div>FLRP User Guide &nbsp;·&nbsp; Rev. 0.4 &nbsp;·&nbsp; © 2026 Semtech Corporation. All Rights Reserved.</div>
+    <div>References: FLRC Protocol v2 Technical Specification Rev. v2.1 &nbsp;·&nbsp; LR2021 Datasheet DS.LR2021 Rev. 2.1</div>
+    <div class="footer-legal">
+      Semtech and the Semtech logo are registered trademarks or service marks of Semtech Corporation.
+      LoRa® is a registered trademark of Semtech Corporation.
+      All other trademarks are the property of their respective owners.
+      Specifications are subject to change without notice.
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  const links = document.querySelectorAll('#nav a');
+  const targets = document.querySelectorAll('h2[id], h3[id]');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const m = document.querySelector(`#nav a[href="#${e.target.id}"]`);
+        if (m) m.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-8% 0px -85% 0px' });
+  targets.forEach(t => obs.observe(t));
+</script>
+
+</body>
+</html>
+
